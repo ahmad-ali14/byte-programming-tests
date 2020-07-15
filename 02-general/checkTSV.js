@@ -10,7 +10,7 @@
 
 var path = require('path');
 const fs = require('fs');
-const lineReader = require('line-reader');
+const readline = require('readline');
 
 
 /**
@@ -110,37 +110,42 @@ const checkSumTsvEnhanced = async (tsvFilePath) => {
         console.error('Error', 'wrong file type');
     }
 
-    var lines = [];
-    var result = 0;
+    var lines = await processLineByLine(tsvFilePath);
+    let result = 0;
 
-    lineReader.eachLine(tsvFilePath, function (line) {
-        let rawValues = line.split(/\t/).map(e => Number(e))
-        lines.push(rawValues);
-        // console.log(lines);
 
-    }, () => {
-        // console.log(lines, 'lines');
-        let r = 0
-        lines.forEach(line => {
-            // console.log(line);
+    lines.forEach((line) => {
 
-            r += (Math.max(...line) - Math.min(...line))
-
-            //  console.log(result);
-
-        });
-        console.log(r);
-        return result = r;
+        result += (Math.max(...line) - Math.min(...line));
 
     })
 
-    //    await console.log(lines);
 
-    await result;
 
+    return result;
+}
+
+
+
+async function processLineByLine(path) {
+    const fileStream = fs.createReadStream(path);
+
+    let _lines = [];
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+    });
+
+
+    for await (const line of rl) {
+        let rawValues = line.split(/\t/).map(e => Number(e))
+        _lines.push(rawValues);
+    }
+
+    return _lines
 }
 
 // console.log(checkSumTsvEnhanced('./02-general.tsv'));
-console.log(checkSumTsvEnhanced('./test.tsv'));
+checkSumTsvEnhanced('./test.tsv').then(e => console.log(e));
 
 //console.log(checkSumTSV('./test.tsv'));
