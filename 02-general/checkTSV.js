@@ -84,12 +84,12 @@ const toNumber = (_arr) => {
 
 /**
  * Run Time Analysis:
- * assuming that n is the number of rows in the supplied file, m is the number of columns in each row . our function costs:
+ * assuming that n is the number of rows in the supplied file, m is the number of columns in each row. and n >> m. our function costs:
  * 1- splitting the string and assign it to data variable: constant * n => O(n).
- * 2- looping over the raw data array and do extract data to the new array: constant * m * n => O(n log n) to O(n^2) worst case if m = n.
+ * 2- looping over the raw data array and do extract data to the new array: constant * m * n => O(n log n).
  * 3- transform each element into a Number, then claculating the max and min and add to the result constant * n ( constant * m + constant * m) => O(n) .
  * 
- * Total Time Cost (worst case): O(n^2).
+ * Total Time Cost (worst case): O(n log n).
  * 
  * 
  */
