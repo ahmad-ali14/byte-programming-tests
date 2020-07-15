@@ -1,5 +1,5 @@
 ```
-INSERT INTO `events`(`bot_id`, `aggeregate_type`, `aggeregate_id`, `event_type`, `event_data`, `created_at`) VALUES ('1','agg','1','VisitState','{"StateName": "reorder-pay" }', cast(cast(2020*10000 + 5*100 + 1 as varchar(255)) as date))
+INSERT INTO `events`(`bot_id`, `aggeregate_type`, `aggeregate_id`, `event_type`, `event_data`, `created_at`) VALUES ('1','agg','1','VisitState','{"StateName": "reorder" }', cast(cast(2020*10000 + 5*100 + 1  as varchar(255)) as date)
 ```
 
 ```
