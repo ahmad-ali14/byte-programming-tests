@@ -28,7 +28,7 @@ const checkSumTSV = (tsvFilePath) => {
      *  */
 
     if (path.extname(tsvFilePath) !== '.tsv') {
-        console.error('Error', 'wrong file type');
+        return console.error('Error', 'wrong file type');
     }
 
     /**
@@ -81,6 +81,7 @@ const toNumber = (_arr) => {
     return arr;
 }
 
+// ================================================================================================//
 
 /**
  * Run Time Analysis:
@@ -94,6 +95,7 @@ const toNumber = (_arr) => {
  * 
  */
 
+// =============================================================================================//
 
 /***
 * Enhancemnts:
@@ -105,19 +107,20 @@ const toNumber = (_arr) => {
 
 const checkSumTsvEnhanced = async (tsvFilePath) => {
 
-
+    // Non tsv files are refused
     if (path.extname(tsvFilePath) !== '.tsv') {
-        console.error('Error', 'wrong file type');
+        return console.error('Error', 'wrong file type');
     }
 
+    // processing the file, converting to Numbers and strore each row in an array.
     var lines = await processLineByLine(tsvFilePath);
+
+    // initializing result
     let result = 0;
 
-
+    // claculating the diff and add it to result
     lines.forEach((line) => {
-
         result += (Math.max(...line) - Math.min(...line));
-
     })
 
 
@@ -128,15 +131,19 @@ const checkSumTsvEnhanced = async (tsvFilePath) => {
 
 
 async function processLineByLine(path) {
+    // create a stream to read our file
     const fileStream = fs.createReadStream(path);
 
+    // initialize lines 
     let _lines = [];
+
+    //read line intrerface, considering \r\n always refer to a new line (tsv files) 
     const rl = readline.createInterface({
         input: fileStream,
         crlfDelay: Infinity
     });
 
-
+    // split the line over each tab, convert the value to a number and then push them as an array to lines array.
     for await (const line of rl) {
         let rawValues = line.split(/\t/).map(e => Number(e))
         _lines.push(rawValues);
@@ -145,7 +152,36 @@ async function processLineByLine(path) {
     return _lines
 }
 
-// console.log(checkSumTsvEnhanced('./02-general.tsv'));
-checkSumTsvEnhanced('./test.tsv').then(e => console.log(e));
 
-//console.log(checkSumTSV('./test.tsv'));
+//============================================================================================//
+
+
+/**
+ * TESTING, 
+ * 
+ *  * I'm not going to use any testing library, just to keep things simple
+ */
+
+
+
+// define tests
+const runTests = (func, testData) => {
+
+
+    testData.map(testEntry => {
+        let testResult = func(testEntry.input);
+        if (testResult === testEntry.expected) {
+            console.log('\x1b[32m', `test Passed, input: ${testEntry.input} , result: ${testEntry.expected} `)
+        } else {
+            console.log('\x1b[31m', `test Failed, input: ${testEntry.input} , result: ${testResult} `)
+        }
+    })
+}
+
+
+// loading test data 
+let data = require('./testData');
+
+// run tests
+runTests(checkSumTSV, data);
+
